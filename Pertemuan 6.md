@@ -10,7 +10,7 @@ Bentuk data paling dasar atau mentah yang belum mengalami proses normalisasi, di
 
 Tabel `non_normalisasi` dalam file SQL ini merupakan contoh nyata dari bentuk UNF tersebut, di mana seluruh informasi penyewaan alat outdoor—mulai dari data transaksi, detail pelanggan, data karyawan, hingga rincian barang dan status pembayaran—disatukan dalam satu tabel tunggal yang "gemuk". Hal ini terlihat jelas pada kolom seperti `Nama_Barang` atau `Harga_Sewa` yang memuat beberapa nilai sekaligus (misalnya "Tenda Dome 4P, Matras Eiger") dalam satu baris, yang menyulitkan integritas dan pengolahan data lebih lanjut.
 
-- **Link Spreadsheet:** [Data UNF](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=2092199918#gid=2092199918)
+- **Link Spreadsheet:** [https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=2092199918#gid=2092199918](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=2092199918#gid=2092199918)
 
 ---
 
@@ -22,7 +22,7 @@ Tahap pertama normalisasi di mana setiap kolom dalam tabel harus bersifat **atom
 
 Dalam file `1nf_normalisasi.sql`, tabel telah ditransformasikan dari bentuk UNF dengan memecah baris data yang sebelumnya memiliki atribut bernilai ganda (seperti `Nama_Barang`, `Kategori_Barang`, dan `Harga_Sewa` yang dipisahkan koma) menjadi baris-baris terpisah. Setiap baris kini merepresentasikan satu item penyewaan yang spesifik (misalnya, transaksi "T-1" yang menyewa Tenda dan Matras kini muncul sebagai dua baris data berbeda), meskipun hal ini menyebabkan duplikasi data pada kolom informasi transaksi lainnya seperti data pelanggan dan total bayar.
 
-- **Link Spreadsheet:** [Data 1NF](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1778783199#gid=1778783199)
+- **Link Spreadsheet:** [https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1778783199#gid=1778783199](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1778783199#gid=1778783199)
 
 ---
 
@@ -34,12 +34,12 @@ Tahap normalisasi yang mensyaratkan data sudah memenuhi kriteria 1NF dan **tidak
 
 Dalam file `2nf_normalisasi.sql`, masalah tersebut diselesaikan dengan memecah tabel besar menjadi dua entitas terpisah:
 
-1.  **Tabel Transaksi**: Menyimpan informasi "header" atau induk transaksi (seperti data pelanggan, karyawan, tanggal, dan status bayar) yang bergantung sepenuhnya pada ID Transaksi.
-2.  **Tabel Detail Transaksi**: Menyimpan rincian item (seperti kode barang, nama barang, dan harga sewa) yang spesifik untuk setiap barang dalam transaksi tersebut.
+1. **Tabel Transaksi**: Menyimpan informasi "header" atau induk transaksi (seperti data pelanggan, karyawan, tanggal, dan status bayar) yang bergantung sepenuhnya pada ID Transaksi.
+2. **Tabel Detail Transaksi**: Menyimpan rincian item (seperti kode barang, nama barang, dan harga sewa) yang spesifik untuk setiap barang dalam transaksi tersebut.
 
 Dengan demikian, redundansi data transaksi yang berulang pada setiap baris barang di tahap 1NF berhasil dihilangkan.
 
-- **Link Spreadsheet:** [Data 2NF](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=638611133#gid=638611133)
+- **Link Spreadsheet:** [https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=638611133#gid=638611133](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=638611133#gid=638611133)
 
 ---
 
@@ -60,7 +60,7 @@ Dalam file `dbl_4_3nf_normalisasi.sql`, prinsip tersebut diterapkan dengan memis
 - `pelanggan`
 - `transaksi`
 
-* **Link Spreadsheet:** [Data 3NF](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1760608169#gid=1760608169)
+* **Link Spreadsheet:** [https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1760608169#gid=1760608169](https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1760608169#gid=1760608169)
 
 > **Referensi Gambar & Jawaban:** [Dokumen Google Docs](https://docs.google.com/document/d/1nffZLmrtbbr8APd5De2RXP3w0LlzJgciwxR94tOmvHA/edit?usp=sharing)
 
