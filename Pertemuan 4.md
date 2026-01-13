@@ -1,6 +1,6 @@
 # Pertemuan 4 - Data Manipulation Language (DML)
 
-Dokumen ini berisi syntax SQL untuk `INSERT`, `UPDATE`, dan `DELETE` berdasarkan tabel-tabel pada schema 3NF.
+Dokumen ini berisi syntax SQL untuk `INSERT`, `UPDATE`, `DELETE`, `SELECT`, dan fungsi agregat lainnya berdasarkan tabel-tabel pada schema 3NF.
 
 ## 1. Syntax SQL INSERT TABLE
 
@@ -174,4 +174,187 @@ Contoh: Menghapus barang dengan kode 'BRG-016'.
 ```sql
 DELETE FROM `barang`
 WHERE `Kode_barang` = 'BRG-016';
+```
+
+## 4. Syntax SQL SELECT & WHERE
+
+Berikut adalah contoh penggunaan `SELECT` dengan kondisi `WHERE` untuk memfilter data.
+
+### Menampilkan Barang dengan Harga Sewa Tertentu
+
+Menampilkan semua barang yang harga sewanya di atas 100.000.
+
+```sql
+SELECT * FROM `barang`
+WHERE `Harga_sewa` > 100000;
+```
+
+### Menampilkan Transaksi Berdasarkan Status Bayar
+
+Menampilkan transaksi yang status bayarnya sudah 'Lunas'.
+
+```sql
+SELECT * FROM `transaksi`
+WHERE `Status_bayar` = 'Lunas';
+```
+
+### Menampilkan Pelanggan dari Kota Tertentu
+
+Menampilkan pelanggan yang beralamat di 'Malang' (menggunakan LIKE untuk pencocokan string).
+
+```sql
+SELECT * FROM `pelanggan`
+WHERE `Alamat_lengkap` LIKE '%Malang%';
+```
+
+## 5. Syntax SQL ORDER BY
+
+Mengurutkan hasil query.
+
+### Mengurutkan Barang Berdasarkan Harga
+
+Menampilkan barang diurutkan dari harga termurah ke termahal.
+
+```sql
+SELECT * FROM `barang`
+ORDER BY `Harga_sewa` ASC;
+```
+
+### Mengurutkan Transaksi Berdasarkan Tanggal
+
+Menampilkan transaksi diurutkan dari yang terbaru.
+
+```sql
+SELECT * FROM `transaksi`
+ORDER BY `tanggal_pinjam` DESC;
+```
+
+## 6. Syntax SQL BETWEEN
+
+Memilih data dalam rentang tertentu.
+
+### Transaksi dalam Periode Tertentu
+
+Menampilkan transaksi yang terjadi antara tanggal 1 Juni 2025 sampai 5 Juni 2025.
+
+```sql
+SELECT * FROM `transaksi`
+WHERE `tanggal_pinjam` BETWEEN '2025-06-01' AND '2025-06-05';
+```
+
+### Barang dengan Range Harga
+
+Menampilkan barang dengan harga sewa antara 50.000 dan 200.000.
+
+```sql
+SELECT * FROM `barang`
+WHERE `Harga_sewa` BETWEEN 50000 AND 200000;
+```
+
+## 7. Syntax SQL LIKE
+
+Mencari data berdasarkan pola string.
+
+### Mencari Nama Pelanggan
+
+Mencari pelanggan yang namanya mengandung kata 'Ronaldo'.
+
+```sql
+SELECT * FROM `pelanggan`
+WHERE `nama_pelanggan` LIKE '%Ronaldo%';
+```
+
+### Mencari Barang Berdasarkan Nama
+
+Mencari barang yang namanya berawalan 'Tenda'.
+
+```sql
+SELECT * FROM `barang`
+WHERE `Nama_barang` LIKE 'Tenda%';
+```
+
+## 8. Syntax SQL COUNT
+
+Menghitung jumlah baris data.
+
+### Menghitung Total Transaksi
+
+```sql
+SELECT COUNT(*) AS `Total_Transaksi`
+FROM `transaksi`;
+```
+
+### Menghitung Jumlah Barang per Kategori
+
+```sql
+SELECT `Id_kategori`, COUNT(*) AS `Jumlah_Barang`
+FROM `barang`
+GROUP BY `Id_kategori`;
+```
+
+## 9. Syntax SQL SUM
+
+Menghitung total nilai (penjumlahan).
+
+### Menghitung Total Pendapatan
+
+Menjumlahkan kolom `Total_bayar` dari semua transaksi.
+
+```sql
+SELECT SUM(`Total_bayar`) AS `Total_Pendapatan`
+FROM `transaksi`;
+```
+
+### Menghitung Total Denda
+
+```sql
+SELECT SUM(`Denda`) AS `Total_Denda`
+FROM `transaksi`;
+```
+
+## 10. Syntax SQL AVG
+
+Menghitung nilai rata-rata.
+
+### Rata-rata Harga Sewa Barang
+
+```sql
+SELECT AVG(`Harga_sewa`) AS `Rata_rata_Harga_Sewa`
+FROM `barang`;
+```
+
+### Rata-rata Rating Pelanggan
+
+```sql
+SELECT AVG(`Rating`) AS `Rata_rata_Rating`
+FROM `transaksi`;
+```
+
+## 11. Syntax SQL MIN
+
+Mendapatkan nilai terkecil.
+
+### Harga Sewa Termurah
+
+```sql
+SELECT MIN(`Harga_sewa`) AS `Harga_Termurah`
+FROM `barang`;
+```
+
+## 12. Syntax SQL MAX
+
+Mendapatkan nilai terbesar.
+
+### Harga Sewa Termahal
+
+```sql
+SELECT MAX(`Harga_sewa`) AS `Harga_Termahal`
+FROM `barang`;
+```
+
+### Transaksi dengan Total Bayar Tertinggi
+
+```sql
+SELECT MAX(`Total_bayar`) AS `Pembayaran_Tertinggi`
+FROM `transaksi`;
 ```
