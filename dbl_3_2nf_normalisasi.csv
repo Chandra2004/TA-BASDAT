@@ -1,0 +1,18 @@
+ID_Transaksi;Kode_Barang;Nama_Barang;Kategori_Barang;Harga_Sewa;Kondisi_Barang_setelah_dikembalikan
+T-1;KB-1;Tenda Dome 4P;Tenda;150.000;Baik
+T-1;KB-1;Matras Eiger;Matras;20.000;Baik
+T-2;KB-2;Carrier Consina 60L;Carrier;300000;Baik
+T-3;KB-3;Headlamp eiger;Headlamp;200.000;Baik
+T-3;KB-3;Trekking Pole;Trekking Pole;50.000;Rusak
+T-4;KB-4;Kompor Portable;Kompor;250.000;Baik
+T-4;KB-4;Panci Set;Peralatan Masak;25.000;Baik
+T-5;KB-5;Sleeping Bag Eiger;Sleeping Bag;180000;Baik
+T-6;KB-6;Tenda Bivak;Tenda;100.000;Baik
+T-6;KB-6;Cooking Set;Peralatan Masak;40.000;Baik
+T-7;KB-7;Jaket Gunung Arei;Jaket;160000;Rusak
+T-8;KB-8;Flysheet;Flysheet;280.000;Baik
+T-8;KB-8;Trekking Pole;Trekking Pole;30.000;Baik
+T-9;KB-9;Sleeping Bag Thermarest;Sleeping Bag;200000;Rusak
+T-10;KB-10;Lampu Tenda;Lampu;50.000;Baik
+T-10;KB-10;Matras;Matras;20.000;Baik
+T-10;KB-10;Gas;Gas;20.000;baik sekali

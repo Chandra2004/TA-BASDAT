@@ -1,0 +1,103 @@
+pertemuan 6
+
+1. UNF (Unormalizer Form)
+	- Penjelasan Tabel UNF (Unormalized Form) :
+		Bentuk data paling dasar atau mentah yang belum mengalami proses normalisasi, ditandai dengan adanya pengulangan grup data (repeating groups), redundansi informasi, dan kolom yang menampung lebih dari satu nilai (multivalue attribute). Tabel non_normalisasi dalam file SQL ini merupakan contoh nyata dari bentuk UNF tersebut, di mana seluruh informasi penyewaan alat outdoor—mulai dari data transaksi, detail pelanggan, data karyawan, hingga rincian barang dan status pembayaran—disatukan dalam satu tabel tunggal yang "gemuk"; hal ini terlihat jelas pada kolom seperti Nama_Barang atau Harga_Sewa yang memuat beberapa nilai sekaligus (misalnya "Tenda Dome 4P, Matras Eiger") dalam satu baris, yang menyulitkan integritas dan pengolahan data lebih lanjut.
+
+	- Link :
+		https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=2092199918#gid=2092199918
+
+2. 1NF (First Normal Form)
+	- Penjelasan Tabel 1NF (First Normal Form) :
+		Tahap pertama normalisasi di mana setiap kolom dalam tabel harus bersifat atomik, artinya setiap sel hanya boleh berisi satu nilai tunggal, dan tidak boleh ada repeating groups (kelompok data yang berulang). Dalam file 1nf_normalisasi.sql ini, tabel telah ditransformasikan dari bentuk UNF dengan memecah baris data yang sebelumnya memiliki atribut bernilai ganda (seperti Nama_Barang, Kategori_Barang, dan Harga_Sewa yang dipisahkan koma) menjadi baris-baris terpisah, sehingga setiap baris kini merepresentasikan satu item penyewaan yang spesifik (misalnya, transaksi "T-1" yang menyewa Tenda dan Matras kini muncul sebagai dua baris data berbeda), meskipun hal ini menyebabkan duplikasi data pada kolom informasi transaksi lainnya seperti data pelanggan dan total bayar.
+
+    - Link :
+        https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1778783199#gid=1778783199
+
+3. 2NF (Second Normal Form)
+    - Penjelasan Tabel 2NF (Second Normal Form) :
+        Tahap normalisasi yang mensyaratkan data sudah memenuhi kriteria 1NF dan tidak ada lagi partial dependency (ketergantungan sebagian), yaitu kondisi di mana atribut bukan kunci (non-primary key) bergantung hanya pada sebagian dari primary key majemuk. Dalam file 2nf_normalisasi.sql ini, masalah tersebut diselesaikan dengan memecah tabel besar menjadi dua entitas terpisah: tabel 2nf_transaksi yang menyimpan informasi "header" atau induk transaksi (seperti data pelanggan, karyawan, tanggal, dan status bayar) yang bergantung sepenuhnya pada ID Transaksi, dan tabel 2nf_detail_transaksi yang menyimpan rincian item (seperti kode barang, nama barang, dan harga sewa) yang spesifik untuk setiap barang dalam transaksi tersebut, sehingga redundansi data transaksi yang berulang pada setiap baris barang di tahap 1NF berhasil dihilangkan.
+
+    - Link :
+        https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=638611133#gid=638611133
+
+4. 3NF (Third Normal Form)
+    - Penjelasan Tabel 3NF (Third Normal Form) :
+        Tahap normalisasi yang mensyaratkan data telah memenuhi 2NF dan tidak boleh memiliki transitive dependency, yaitu kondisi di mana atribut non-primary key bergantung pada atribut non-primary key lainnya (bukan langsung pada primary key utama). Dalam file dbl_4_3nf_normalisasi.sql ini, prinsip tersebut diterapkan dengan memisahkan atribut yang tidak bergantung langsung pada ID_Transaksi ke dalam tabel master tersendiri—seperti data Pelanggan (Nama, Alamat), dan Karyawan (Nama, Shift)—sehingga tabel Transaksi kini hanya menyimpan referensi (Foreign Key) ke entitas-entitas tersebut; hal ini menjamin bahwa setiap perubahan data master (misalnya perubahan alamat pelanggan) cukup dilakukan di satu tempat tanpa perlu mengubah setiap baris riwayat transaksi, memastikan integritas data yang lebih baik.
+
+    - Tabel (ini kasih ono tabel di wordnya, ada di sheet 3NF tinggal copas aja):
+        - barang
+        - detail_transaksi
+        - karyawan
+        - kategori
+        - pelanggan
+        - transaksi
+    (https://docs.google.com/spreadsheets/d/1LKTpZRG9sii31ZERMKt-w4fJQ2HMkexAYec8y_oxbGA/edit?gid=1760608169#gid=1760608169)
+
+
+
+jawaban fotonya ndek sini : https://docs.google.com/document/d/1nffZLmrtbbr8APd5De2RXP3w0LlzJgciwxR94tOmvHA/edit?usp=sharing
+
+(terserah kmu mau pake gambar apa teks)
+
+5. VIEW Laporan Frekuensi Penyewaan Alat
+    - Query :
+        CREATE VIEW view_laporan_frekuensi_penyewaan AS
+        SELECT 
+            k.Nama_Kategori, 
+            COUNT(dt.ID_Barang) AS Frekuensi_Sewa
+        FROM detail_transaksi dt
+        JOIN barang b ON dt.ID_Barang = b.ID_Barang
+        JOIN kategori k ON b.ID_Kategori = k.ID_Kategori
+        GROUP BY k.Nama_Kategori
+        ORDER BY Frekuensi_Sewa DESC;
+
+6. VIEW Statistik Keterlambatan Pelanggan
+    - Query :
+        CREATE VIEW view_statistik_keterlambatan_pelanggan AS
+        SELECT 
+            p.Nama_Pelanggan,
+            COUNT(t.ID_Transaksi) AS Jumlah_Keterlambatan,
+            SUM(t.Denda) AS Total_Denda
+        FROM transaksi t
+        JOIN pelanggan p ON t.ID_Pelanggan = p.ID_Pelanggan
+        WHERE t.Denda > 0 OR t.Keterlambatan_pembayaran LIKE '%telat%'
+        GROUP BY p.Nama_Pelanggan;
+
+7. VIEW Deteksi Barang Bermasalah
+    - Query :
+        CREATE VIEW view_deteksi_barang_bermasalah AS
+        SELECT 
+            k.Nama_Kategori,
+            COUNT(dt.ID_Barang) AS Jumlah_Rusak
+        FROM detail_transaksi dt
+        JOIN barang b ON dt.ID_Barang = b.ID_Barang
+        JOIN kategori k ON b.ID_Kategori = k.ID_Kategori
+        WHERE dt.Kondisi_Barang_setelah_dikembalikan LIKE '%Rusak%'
+        GROUP BY k.Nama_Kategori
+        ORDER BY Jumlah_Rusak DESC;
+
+8. Update Denda keterlambatan barang kembali
+    - Query :
+        UPDATE transaksi
+        SET Denda = (0.15 * Total_Bayar * DATEDIFF(Tanggal_Bayar, Tanggal_Kembali))
+        WHERE Tanggal_Bayar > Tanggal_Kembali;
+
+9. Update keterangan denda
+    - Query :
+        UPDATE transaksi t
+        JOIN detail_transaksi dt ON t.ID_Transaksi = dt.ID_Transaksi
+        SET t.Keterangan_Denda = 'Kerusakan barang saat pengembalian'
+        WHERE dt.Kondisi_Barang_setelah_dikembalikan LIKE '%Rusak%';
+
+10. VIEW Rata-rata Rating Pelanggan per Barang
+    - Query :
+        CREATE VIEW view_rata_rata_rating_per_barang AS
+        SELECT 
+            b.Nama_Barang,
+            ROUND(AVG(t.Rating), 1) AS Rata_Rata_Rating
+        FROM detail_transaksi dt
+        JOIN transaksi t ON dt.ID_Transaksi = t.ID_Transaksi
+        JOIN barang b ON dt.ID_Barang = b.ID_Barang
+        GROUP BY b.Nama_Barang
+        ORDER BY Rata_Rata_Rating DESC;    

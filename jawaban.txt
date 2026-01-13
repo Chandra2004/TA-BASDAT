@@ -1,0 +1,61 @@
+-- 1. VIEW Laporan Frekuensi Penyewaan Alat
+-- Menampilkan kategori barang paling sering disewa dan berapa kali disewa.
+CREATE VIEW view_laporan_frekuensi_penyewaan AS
+SELECT 
+    k.Nama_kategori, 
+    COUNT(dt.kode_barang) AS Frekuensi_Sewa
+FROM detail_transaksi dt
+JOIN barang b ON dt.kode_barang = b.Kode_barang
+JOIN kategori k ON b.Id_kategori = k.Id_kategori
+GROUP BY k.Nama_kategori
+ORDER BY Frekuensi_Sewa DESC;
+
+-- 2. VIEW Statistik Keterlambatan Pelanggan
+-- Menghitung jumlah keterlambatan pelanggan dan total denda per pelanggan.
+CREATE VIEW view_statistik_keterlambatan_pelanggan AS
+SELECT 
+    p.nama_pelanggan,
+    COUNT(t.Id_transaksi) AS Jumlah_Keterlambatan,
+    SUM(t.Denda) AS Total_Denda
+FROM transaksi t
+JOIN pelanggan p ON t.Id_Pelanggan = p.Id_pelanggan
+WHERE t.Denda > 0 OR t.Keterlambatan_pembayaran LIKE '%telat%'
+GROUP BY p.nama_pelanggan;
+
+-- 3. VIEW Deteksi Barang Bermasalah
+-- Menampilkan kategori barang yang sering dikembalikan dalam kondisi rusak.
+CREATE VIEW view_deteksi_barang_bermasalah AS
+SELECT 
+    k.Nama_kategori,
+    COUNT(dt.kode_barang) AS Jumlah_Rusak
+FROM detail_transaksi dt
+JOIN barang b ON dt.kode_barang = b.Kode_barang
+JOIN kategori k ON b.Id_kategori = k.Id_kategori
+WHERE dt.Kondisi_barang LIKE '%Rusak%'
+GROUP BY k.Nama_kategori
+ORDER BY Jumlah_Rusak DESC;
+
+-- 4. Update Denda keterlambatan barang kembali
+-- Rumus: 0.15 * Total_bayar * Selisih_Hari
+UPDATE transaksi
+SET Denda = (0.15 * Total_bayar * DATEDIFF(Tanggal_bayar, tanggal_kembali))
+WHERE Tanggal_bayar > tanggal_kembali;
+
+-- 5. Update keterangan denda
+-- Melakukan pembaruan keterangan denda apabila kondisi barang yang dikembalikan menuandung kata “Rusak”
+UPDATE transaksi t
+JOIN detail_transaksi dt ON t.Id_transaksi = dt.Id_transaksi
+SET t.Keterangan_denda = 'Kerusakan barang saat pengembalian'
+WHERE dt.Kondisi_barang LIKE '%Rusak%';
+
+-- 6. VIEW Rata-rata Rating Pelanggan per Barang
+-- Menghitung rata-rata rating pelanggan untuk setiap barang untuk mengetahui barang mana yang paling memuaskan pelanggan.
+CREATE VIEW view_rata_rata_rating_per_barang AS
+SELECT 
+    b.Nama_barang,
+    ROUND(AVG(t.Rating), 1) AS Rata_Rata_Rating
+FROM detail_transaksi dt
+JOIN transaksi t ON dt.Id_transaksi = t.Id_transaksi
+JOIN barang b ON dt.kode_barang = b.Kode_barang
+GROUP BY b.Nama_barang
+ORDER BY Rata_Rata_Rating DESC;
